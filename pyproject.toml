@@ -5,7 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "dataloop"
 version = "0.0.1"
-dependencies = [ "aiohttp", "cchardet", "aiodns", "motor", "dnspython", "pydantic", "pika"]
+dependencies = [ "aiohttp==3.8.1",
+                 "aio-pika==8.0.3",
+                 "aiodns==3.0.0",
+                 "cchardet==2.1.7",
+                 "motor==3.0.0",
+                 "dnspython==2.2.1",
+                 "pydantic==1.9.1"]
 
 [tool.setuptools]
 include-package-data = true

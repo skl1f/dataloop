@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-aiohttp = {index = "pypi"}
-cchardet = {index = "pypi"}
-aiodns = {index = "pypi"}
-motor = {index = "pypi"}
-dnspython = {index = "pypi"}
-pydantic = {index = "pypi"}
-aio-pika = {index = "pypi"}
+aiohttp = {version = "==3.8.1", index = "pypi"}
+aio-pika = {version = "==8.0.3", index = "pypi"}
+aiodns = {version = "==3.0.0", index = "pypi"}
+cchardet = {version = "==2.1.7", index = "pypi"}
+motor = {version = "==3.0.0", index = "pypi"}
+pydantic = {version = "==1.9.1", index = "pypi"}
+dnspython = {version = "==2.2.1", index = "pypi"}
 
 [dev-packages]
 build = {index = "pypi"}
