@@ -2,3 +2,5 @@
 __pycache__/
 dataloop.egg-info/
 dist/
+/terraform/.terraform/
+/.DS_Store
