@@ -13,19 +13,59 @@ variable "gke_num_nodes" {
   description = "number of gke nodes"
 }
 
+variable "master_ipv4_cidr_block" {
+  default     = ""
+  description = "master network block"
+}
+
+variable "pods_ipv4_cidr_block" {
+  default     = ""
+  description = "pods network block"
+}
+
+variable "services_ipv4_cidr_block" {
+  default     = ""
+  description = "services network block"
+}
+
 # GKE cluster
 resource "google_container_cluster" "primary" {
   name     = "${var.project_id}-gke"
   location = var.region
-  
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
-  # node pool and immediately delete it.
+
   remove_default_node_pool = true
   initial_node_count       = 1
 
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
+
+  maintenance_policy {
+    daily_maintenance_window {
+      start_time = "02:00"
+    }
+  }
+
+  network_policy {
+    enabled           = true
+  }
+
+  addons_config {
+    network_policy_config {
+      disabled = false
+    }
+  }
+
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block = var.pods_ipv4_cidr_block
+    services_ipv4_cidr_block = var.services_ipv4_cidr_block
+  }
+
+    private_cluster_config {
+    enable_private_endpoint = false
+    enable_private_nodes    = true
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+  }
+
 }
 
 # Separately Managed Node Pool

@@ -1,2 +1,9 @@
-project_id = "ordinal-torch-327414"
-region     = "europe-west1"
+project_id               = "ordinal-torch-327414"
+region                   = "europe-west1"
+bastion_zone             = "europe-west1-b"
+bastion_allowed_sources  = "213.139.212.21/32"
+master_ipv4_cidr_block   = "10.100.100.0/28"
+pods_ipv4_cidr_block     = "10.101.0.0/16"
+services_ipv4_cidr_block = "10.102.0.0/16"
+compute_ip_cidr_range    = "10.10.0.0/16"
+gke_num_nodes            = 2

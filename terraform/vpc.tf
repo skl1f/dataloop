@@ -6,6 +6,10 @@ variable "region" {
   description = "region"
 }
 
+variable "compute_ip_cidr_range" {
+  description = "compute subnet"
+}
+
 provider "google" {
   project = var.project_id
   region  = var.region
@@ -19,10 +23,17 @@ resource "google_compute_network" "vpc" {
 
 # Subnet
 resource "google_compute_subnetwork" "subnet" {
-  name          = "${var.project_id}-subnet"
-  region        = var.region
-  network       = google_compute_network.vpc.name
-  ip_cidr_range = "10.10.0.0/24"
+  name                      = "${var.project_id}-subnet"
+  region                    = var.region
+  network                   = google_compute_network.vpc.name
+  private_ip_google_access  = true
+  ip_cidr_range             = var.compute_ip_cidr_range
+
+  log_config {
+    aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.5
+    metadata             = "INCLUDE_ALL_METADATA"
+  }
 }
 
 # Router
