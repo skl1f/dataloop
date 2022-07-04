@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: services
+  name: dataloop
+  labels:
+    app: dataloop
+spec:
+  selector:
+    matchLabels:
+      app: dataloop
+  template:
+    metadata:
+      labels:
+        app: dataloop
+    spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
+      containers:
+        - name: dataloop
+          image: europe-west1-docker.pkg.dev/ordinal-torch-327414/dataloop/server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http-dataloop
+              protocol: TCP
+          envFrom:
+          - configMapRef:
+              name: dataloop-configmap
+          - secretRef:
+              name: dataloop-secrets
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dataloop
+  namespace: services
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http-dataloop
+  selector:
+    app: dataloop
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dataloop-configmap
+  namespace: services
+data:
+  MONGODB_HOSTNAME: cluster0.k3c59wx.mongodb.net
+  RABBITMQ_HOSTNAME: kangaroo.rmq.cloudamqp.com
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dataloop-secrets
+  namespace: services
+type: Opaque
+data:
+  RABBITMQ_USERNAME: c3VwZXItc2VjcmV0LXBhc3N3b3Jk
+  RABBITMQ_PASSWORD: c3VwZXItc2VjcmV0LXBhc3N3b3Jk
+  MONGODB_USERNAME: c3VwZXItc2VjcmV0LXBhc3N3b3Jk
+  MONGODB_PASSWORD: c3VwZXItc2VjcmV0LXBhc3N3b3Jk
+# storing secrets in code is a bad practice as base64 is not an encryption
+# echo -n 'super-secret-password' | base64

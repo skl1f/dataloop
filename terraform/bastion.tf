@@ -8,6 +8,17 @@ variable "bastion_allowed_sources" {
   description = "CIDR range to allow ssh connection to bastion"
 }
 
+// Bastion dns
+resource "google_dns_record_set" "bastion" {
+  name = "bastion.${google_dns_managed_zone.gcp-europe-west1.dns_name}"
+  type = "A"
+  ttl  = 300
+
+  managed_zone = google_dns_managed_zone.gcp-europe-west1.name
+
+  rrdatas = [google_compute_instance.bastion.network_interface[0].access_config[0].nat_ip]
+}
+
 // Dedicated service account for the Bastion instance.
 resource "google_service_account" "bastion" {
   account_id   = "${var.project_id}-bastion"

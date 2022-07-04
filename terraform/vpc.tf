@@ -65,3 +65,15 @@ resource "google_compute_router_nat" "nat_manual" {
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 }
+
+resource "google_dns_record_set" "outgoing" {
+  name = "outgoing.${google_dns_managed_zone.gcp-europe-west1.dns_name}"
+  type = "A"
+  ttl  = 300
+
+  managed_zone = google_dns_managed_zone.gcp-europe-west1.name
+
+  rrdatas = [google_compute_address.address[0].address,
+  google_compute_address.address[1].address,
+  google_compute_address.address[2].address]
+}

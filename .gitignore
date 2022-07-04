@@ -4,3 +4,5 @@ dataloop.egg-info/
 dist/
 /terraform/.terraform/
 /.DS_Store
+env
+service_account_key.json

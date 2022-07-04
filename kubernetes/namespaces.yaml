@@ -1,11 +1,60 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: default
+  labels:
+    purpose: default
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: monitoring
   labels:
-    service: monitoring
+    purpose: monitoring
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: services
+  labels:
+    purpose: services
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-only-services-from-default
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          purpose: services
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: monitoring
+  name: deny-from-other-namespaces
+spec:
+  podSelector:
+    matchLabels:
+  ingress:
+  - from:
+    - podSelector: {}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-services-from-default
+  namespace: services
+spec:
+  podSelector:
+    matchLabels:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          purpose: default
