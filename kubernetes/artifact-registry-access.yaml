@@ -5,10 +5,3 @@ metadata:
   namespace: services
 imagePullSecrets:
 - name: artifact-registry
-
-#kubectl create secret docker-registry artifact-registry \
-#--docker-server=https://europe-west1-docker.pkg.dev \
-#--docker-email=SERVICE-ACCOUNT-EMAIL \
-#--docker-username=_json_key \
-#--docker-password="$(cat service_account_key.json)" \
-#--namespace services

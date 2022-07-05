@@ -20,10 +20,3 @@ resource "google_artifact_registry_repository_iam_member" "repo-iam" {
   role   = "roles/artifactregistry.reader"
   member =  "serviceAccount:${google_service_account.artifacts_pull.email}"
 }
-
-
-#kubectl create secret docker-registry artifact-registry \
-#--docker-server=https://europe-west1-docker.pkg.dev \
-#--docker-email=service-artifacts-pull@ordinal-torch-327414.iam.gserviceaccount.com \
-#--docker-username=_json_key \
-#--docker-password="$(cat ~/Downloads/ordinal-torch-327414-4bea2cc29205.json)"

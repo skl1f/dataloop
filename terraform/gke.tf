@@ -13,6 +13,11 @@ variable "gke_num_nodes" {
   description = "number of gke nodes"
 }
 
+variable "gke_machine_type" {
+  default     = "n1-standard-4"
+  description = "GKE nodes type"
+}
+
 variable "master_ipv4_cidr_block" {
   default     = ""
   description = "master network block"
@@ -66,6 +71,12 @@ resource "google_container_cluster" "primary" {
     master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 
+  dns_config {
+      cluster_dns        = "CLOUD_DNS"
+      cluster_dns_scope  = "VPC_SCOPE"
+      cluster_dns_domain = "${var.project_id}-gke"
+    }
+
 }
 
 # Separately Managed Node Pool
@@ -81,12 +92,13 @@ resource "google_container_node_pool" "primary_nodes" {
       "https://www.googleapis.com/auth/monitoring",
     ]
 
+    preemptible  = true
+    machine_type = var.gke_machine_type
+
     labels = {
       env = var.project_id
     }
 
-    preemptible  = true
-    machine_type = "n1-standard-1"
     tags         = ["gke-node", "${var.project_id}-gke"]
     metadata = {
       disable-legacy-endpoints = "true"

@@ -3,32 +3,40 @@ kind: Namespace
 metadata:
   name: default
   labels:
-    purpose: default
+    name: default
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: monitoring
   labels:
-    purpose: monitoring
+    name: monitoring
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: services
   labels:
-    purpose: services
+    name: services
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-only-services-from-default
+  name: default-deny-all
   namespace: default
 spec:
-  podSelector:
-    matchLabels:
-  egress:
-  - to:
+  podSelector: {}
+  ingress: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-allow-services
+  namespace: default
+spec:
+  podSelector: {}
+  ingress:
+  - from:
     - namespaceSelector:
         matchLabels:
           purpose: services
@@ -44,17 +52,3 @@ spec:
   ingress:
   - from:
     - podSelector: {}
----
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-services-from-default
-  namespace: services
-spec:
-  podSelector:
-    matchLabels:
-  ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          purpose: default

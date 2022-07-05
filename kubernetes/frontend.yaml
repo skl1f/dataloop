@@ -14,7 +14,7 @@ data:
           listen       80;
           server_name  localhost;
           location / {
-            proxy_pass http://dataloop.services.svc.cluster.local/;
+            proxy_pass http://dataloop.services.svc.ordinal-torch-327414-gke/;
           }
       }
     }
