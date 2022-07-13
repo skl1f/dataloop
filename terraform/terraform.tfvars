@@ -6,5 +6,5 @@ master_ipv4_cidr_block   = "10.100.100.0/28"
 pods_ipv4_cidr_block     = "10.101.0.0/16"
 services_ipv4_cidr_block = "10.102.0.0/16"
 compute_ip_cidr_range    = "10.10.0.0/16"
-gke_num_nodes            = 2
+gke_num_nodes            = 1
 gke_machine_type         = "n1-standard-2"

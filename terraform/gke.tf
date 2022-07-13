@@ -51,7 +51,8 @@ resource "google_container_cluster" "primary" {
   }
 
   network_policy {
-    enabled           = true
+    provider = "CALICO"
+    enabled  = true
   }
 
   addons_config {
@@ -100,8 +101,5 @@ resource "google_container_node_pool" "primary_nodes" {
     }
 
     tags         = ["gke-node", "${var.project_id}-gke"]
-    metadata = {
-      disable-legacy-endpoints = "true"
-    }
   }
 }

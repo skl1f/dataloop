@@ -6,3 +6,4 @@ dist/
 /.DS_Store
 env
 service_account_key.json
+docker/dataloop-0.0.1-py3-none-any.whl

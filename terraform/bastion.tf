@@ -80,7 +80,6 @@ resource "google_compute_instance" "bastion" {
   }
 
   scheduling {
-    preemptible       = true
     automatic_restart = false
   }
 }
